@@ -1,4 +1,4 @@
-name: Server CI/CD
+name: Client CI/CD
 
 on:
   push:
@@ -13,18 +13,18 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Login to DockerHub
+      - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build Docker Image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/server-app:${{ github.sha }} .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/client-app:${{ github.sha }} .
 
       - name: Push Docker Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/server-app:${{ github.sha }}
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/client-app:${{ github.sha }}
 
       - name: Update docker-compose image tag
         run: |
-          sed -i "s|server-app:.*|server-app:${{ github.sha }}|" docker-compose.yml
+          sed -i "s|client-app:.*|client-app:${{ github.sha }}|" docker-compose.yml
 
       - name: Deploy with Docker Compose
         run: |
